@@ -1,10 +1,16 @@
 import scraper
 import csv
+import math
+import multiprocessing as mp
+from scraper import getCount, crawl
 
-print(len(hrefs))
-ids = [h.split('/')[-1] for h in hrefs]
-with open('data\ids.csv', 'w') as csvFile:
-    writer = csv.writer(csvFile)
-    writer.writerows(ids)
+if __name__ == '__main__':
+    pages = math.ceil(int(getCount())/20)
+    pool = mp.Pool(processes=4)
+    results = [pool.apply_async(crawl, args=(x,)) for x in range(1,pages+1)]
+    output = [p.get() for p in results]
+    with open('data\ids.csv', 'w') as csvFile:
+        writer = csv.writer(csvFile)
+        writer.writerows(output)
 
-csvFile.close()
+    csvFile.close()

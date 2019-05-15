@@ -12,7 +12,7 @@ def crawl(currentPage, hrefs=[]):
         response =requests.get(mainUrl+ str(currentPage))
         soup = BeautifulSoup(response.text,"html.parser")
         a = soup.findAll("a", {"class": "link-file"})
-        hrefs.append([link.get('href') for link in a] if len(a) > 0 else [])
+        hrefs.append([link.get('href').split('/')[-1] for link in a] if len(a) > 0 else [])
         print(currentPage)
         return hrefs
     except Exception as e:
